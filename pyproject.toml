@@ -4,6 +4,8 @@ version = "0.1.0"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+  "jinja2>=3.1.6,<4.0",
+  "python-dotenv>=1.1.1,<2.0",
 ]
 
 [dependency-groups]
@@ -12,6 +14,17 @@ dev = [
     "pre-commit>=4.2.0",
     "ruff>=0.12.7",
 ]
+
+[project.scripts]
+build = "scripts.build:main"
+
+[build-system]
+requires = ["uv_build>=0.8.4,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "scripts"
+module-root = ""
 
 [tool.mypy]
 disallow_untyped_defs = true
