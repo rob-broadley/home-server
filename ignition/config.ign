@@ -1,0 +1,140 @@
+{
+  "ignition": {
+    "version": "3.2.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "name": "root",
+        "passwordHash": "{{ root_passwd }}"
+      },
+      {
+        "name": "admin",
+        "passwordHash": "{{ admin_passwd }}",
+        "sshAuthorizedKeys": [
+          {% set keys = admin_ssh_keys.split(';') %}
+          {% for item in keys %}
+            "{{ item }}"{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "filesystems": [
+      {
+        "device": "/dev/disk/by-label/ROOT",
+        "format": "btrfs",
+        "mountOptions": [
+          "subvol=/@/home"
+        ],
+        "path": "/home",
+        "wipeFilesystem": false
+      }
+    ],
+    "files": [
+      {
+        "overwrite": true,
+        "path": "/home/admin/.pam_oath_usersfile",
+        "contents": {
+          "source": "data:,{{ admin_totp }}"
+        },
+        "user": {
+          "name": "admin"
+        },
+        "group": {
+          "name": "admin"
+        },
+        "mode": 384
+      },
+      {
+        "path": "/etc/containers/systemd/home.network",
+        "mode": 420,
+        "overwrite": true,
+        "contents": {
+          "source": ""
+        }
+      },
+      {
+        "path": "/etc/containers/systemd/adguard.container",
+        "mode": 420,
+        "overwrite": true,
+        "contents": {
+          "source": ""
+        }
+      },
+      {
+        "path": "/etc/ssh/sshd_config.d/override.conf",
+        "mode": 420,
+        "overwrite": true,
+        "contents": {
+          "source": ""
+        }
+      },
+      {
+        "path": "/etc/rebootmgr.conf",
+        "mode": 420,
+        "overwrite": true,
+        "contents": {
+          "source": ""
+        }
+      },
+      {
+        "path": "/etc/hostname",
+        "mode": 420,
+        "overwrite": true,
+        "contents": {
+          "source": "data:,home-server"
+        }
+      },
+      {
+        "path": "/etc/locale.conf",
+        "mode": 420,
+        "overwrite": true,
+        "contents": {
+          "source": ""
+        }
+      },
+      {
+        "path": "/etc/NetworkManager/conf.d/noauto.conf",
+        "mode": 420,
+        "overwrite": true,
+        "contents": {
+          "source": ""
+        }
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "name": "cockpit.socket",
+        "enabled": true
+      },
+      {
+        "name": "podman.socket",
+        "enabled": true
+      },
+      {
+        "name": "podman-auto-update.timer",
+        "enabled": true,
+        "dropins": [
+          {
+            "name": "timer-override.conf",
+            "contents": ""
+          }
+        ]
+      },
+      {
+        "name": "transactional-update.timer",
+        "enabled": true,
+        "dropins": [
+          {
+            "name": "timer-override.conf",
+            "contents": ""
+          }
+        ]
+      }
+    ]
+  }
+}
