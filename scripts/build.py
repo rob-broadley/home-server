@@ -5,6 +5,7 @@ import json
 import os
 import pathlib
 import re
+import secrets
 import typing
 
 import dotenv
@@ -19,7 +20,20 @@ ENV_VARS = [
     "ADMIN_SSH_KEYS",
     "ADMIN_TOTP",
     "DISK_PASSWD",
+    "ADGUARD_MAC",
 ]
+
+
+def gen_random_locally_administered_mac() -> str:
+    """Generate a random locally administered MAC address.
+
+    Returns:
+        A string representing a random MAC address in the format
+        "02:00:00:xx:xx:xx" where xx are random hexadecimal digits.
+    """
+    return "02:00:00:{:02x}:{:02x}:{:02x}".format(
+        *[secrets.randbits(8) for _ in range(3)]
+    )
 
 
 def is_jinja(string: str) -> bool:
@@ -174,6 +188,7 @@ def main() -> None:
     """Build Ignition and Combustion configuration files."""
     dotenv.load_dotenv()
     jinja_vars = {i.lower(): os.environ[i] for i in ENV_VARS}
+    jinja_vars.setdefault("adguard_mac", gen_random_locally_administered_mac())
     IgnitionBuilder(variables=jinja_vars).build()
     CombustionBuilder(variables=jinja_vars).build()
 

@@ -1,0 +1,9 @@
+[Unit]
+Description=Home MacVLAN network
+
+[Network]
+Driver=macvlan
+Gateway=192.168.1.1
+Label=”home”
+Options=parent=eth0
+Subnet=192.168.1.0/24
