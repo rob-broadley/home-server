@@ -10,9 +10,13 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "mypy>=1.17.1,<2.0",
-    "pre-commit>=4.2.0",
-    "ruff>=0.12.7",
+  {include-group = "lint"},
+  "ipython>=9.4.0",
+]
+lint = [
+  "mypy>=1.17.1,<2.0",
+  "pre-commit>=4.2.0",
+  "ruff>=0.12.7",
 ]
 
 [project.scripts]
