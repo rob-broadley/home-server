@@ -81,11 +81,22 @@ class IgnitionBuilder:
         self._vars = variables
         self._conf: dict[str, typing.Any] = {}
 
+    def _populate_template(self, template: str) -> str:
+        """Populate a Jinja2 template with the provided variables.
+
+        Args:
+            template: The Jinja2 template as a string.
+
+        Returns:
+            The populated template as a string.
+        """
+        jinja_template = jinja2.Template(template)
+        return jinja_template.render(**self._vars)
+
     def _first_pass(self) -> None:
         """Perform the first pass to populate the Ignition configuration."""
         template_source = self.TEMPLATE_PATH.read_text(encoding="utf-8")
-        template = jinja2.Template(template_source)
-        populated = template.render(**self._vars)
+        populated = self._populate_template(template_source)
         self._conf = json.loads(populated)
 
     def _set_file_source(self, file: dict[str, typing.Any]) -> None:
@@ -97,13 +108,14 @@ class IgnitionBuilder:
         source = file.get("contents", {}).get("source", "")
         if not source:
             source_file = FILES.joinpath(file["path"].lstrip("/"))
-            content = source_file.read_text(encoding="utf-8")
+            file_content = source_file.read_text(encoding="utf-8")
+            if is_jinja(file_content):
+                file_content = self._populate_template(file_content)
+            source = create_utf8_data_source(file_content)
         elif is_jinja(source):
-            template = jinja2.Template(source)
-            content = template.render(self._vars)
+            source = self._populate_template(source)
         else:
             return
-        source = create_utf8_data_source(content)
         file["contents"]["source"] = source
 
     def _add_files(self) -> None:
