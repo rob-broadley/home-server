@@ -18,7 +18,7 @@ ENV_VARS = [
     "ROOT_PASSWD",
     "ADMIN_PASSWD",
     "ADMIN_SSH_KEYS",
-    "ADMIN_TOTP",
+    "ADMIN_OTP_SECRET",
     "DISK_PASSWD",
     "ADGUARD_MAC",
 ]

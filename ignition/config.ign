@@ -37,7 +37,7 @@
         "overwrite": true,
         "path": "/home/admin/.pam_oath_usersfile",
         "contents": {
-          "source": "data:,{{ admin_totp }}"
+          "source": "data:,HOTP/T30/6 admin - {{ admin_otp_secret }}"
         },
         "user": {
           "name": "admin"
