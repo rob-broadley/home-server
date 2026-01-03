@@ -1,9 +1,9 @@
 # home-server
 
 System to build an Ignition configuration and a Combustion script to provision
-a Leap Micro (6.1) based home server.
+a Leap Micro (6.2) based home server.
 
-The operating system images are available here: https://get.opensuse.org/leapmicro/6.1/
+The operating system images are available here: https://get.opensuse.org/leapmicro/6.2/
 
 This provisions:
 
