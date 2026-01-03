@@ -88,6 +88,12 @@ The filesystem for the `ignition` partition should be as follows:
 Ensure the drive is attached when installing the OS, and the provisioning will
 happen automatically once the install completes (first boot).
 
+An ISO filesystem can be created using `mkisofs` as follows:
+
+```sh
+mkisofs -full-iso9660-filenames -o ignition.iso -V ignition _build
+```
+
 ## Development Setup
 
 Set up git hooks: `uv run pre-commit install`.
