@@ -60,6 +60,13 @@ The secret key can be generated with:
 head -c 1024 /dev/urandom | openssl sha1 | awk '{ print $2 }'
 ```
 
+To convert the hex output into a base32 code for OTP apps use `xxd` and `base32`,
+for example:
+
+```sh
+source .env; echo "$ADMIN_OTP_SECRET" | xxd -r -p | base32
+```
+
 ### Creating Ignition Drive
 
 Running `uv run build` will create the files needed for provisioning
