@@ -7,6 +7,7 @@ import pathlib
 import re
 import secrets
 import typing
+import urllib.parse
 
 import dotenv
 import jinja2
@@ -114,8 +115,10 @@ class IgnitionBuilder:
             source = create_utf8_data_source(file_content)
         elif is_jinja(source):
             source = self._populate_template(source)
-        else:
-            return
+        mime_type, sep, data = source.partition(",")
+        if mime_type == "data:":
+            data = urllib.parse.quote(data, safe="", encoding="utf-8")
+            source = f"{mime_type}{sep}{data}"
         file["contents"]["source"] = source
 
     def _add_files(self) -> None:
