@@ -72,7 +72,7 @@
         }
       },
       {
-        "path": "/etc/rebootmgr.conf",
+        "path": "/etc/rebootmgr/rebootmgr.conf",
         "mode": 420,
         "overwrite": true,
         "contents": {
